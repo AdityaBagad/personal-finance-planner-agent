@@ -1,0 +1,17 @@
+transaction_id,date,merchant_name,raw_description,amount_inr,direction,currency
+TXN-1001,2026-11-01,Prestige Rentals,NEFT-A/C-987654321012-Nov Rent,25000,DEBIT,INR
+TXN-1001,2026-11-01,TechCorp Payroll,NEFT-SALARY-A/C-987654321012,95000,CREDIT,INR
+TXN-1002,2026-11-02,Prestige Rentals,NEFT-A/C-987654321012-Nov House Rent,26000,DEBIT,INR
+TXN-1002,2026-11-03,BigBasket,UPI-ravi@okicici-Groceries,4200,DEBIT,INR
+TXN-1003,2026-11-03,BigBasket,UPI-ravi@okicici-Groceries,4200,DEBIT,INR
+TXN-1003,2026-11-04,BigBasket,UPI-ravi@okicici-Weekly Groceries,4350,DEBIT,INR
+TXN-1004,2026-11-04,BigBasket,UPI-ravi@okicici-Weekly Groceries,4350,DEBIT,INR
+TXN-1004,2026-11-05,ABC Enterprises,POS TXN 4412,3150,DEBIT,INR
+TXN-1005,2026-11-06,ABC Enterprises,POS TXN 4412 PUNE,3200,DEBIT,INR
+TXN-1005,2026-11-08,BESCOM,Electricity Bill Payment,2850,DEBIT,INR
+TXN-1006,2026-11-09,MSEDCL,Electricity Bill Payment,2450,DEBIT,INR
+TXN-1006,2026-11-10,Swiggy,Online Food Order,1450,DEBIT,INR
+TXN-1007,2026-11-12,BadEntryStore,Corrupted Row,-500,DEBIT,INR
+TXN-1007,2026-11-12,Swiggy,Online Food Order,1180,DEBIT,INR
+TXN-1008,2026-11-15,BadEntryStore,Corrupted Negative Row,-500,DEBIT,INR
+
