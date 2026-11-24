@@ -8,88 +8,40 @@ It converts synthetic bank statements or receipts into normalized, categorized t
 
 ---
 
-## Key Features
-
-- **Multi-Format Ingestion & Normalization:** Parses bank statement CSVs (`transaction_id,date,merchant,raw_description,amount_inr,direction,currency`) and raw receipt `.txt` files while rejecting unsupported formats and corrupted/negative entries.
-- **Privacy & PII Masking Guardrails:** Automatically masks bank account numbers (`XXXX-XXXX-1012`), card numbers, and UPI handles (`r***@okicici`) before data reaches LLM context or audit logs.
-- **Confidence Scoring & Human-in-the-Loop (HITL):** Categorizes transactions across 13 standard categories with confidence scores and reasons, flags low-confidence (`< 0.75`) and duplicate rows, and blocks persistence until explicit user approval.
-- **Persistent Merchant Memory & Audit Trail:** Remembers user-approved merchant-to-category mappings (`merchant_map.json`) and logs every state-changing action to an append-only audit trail (`audit_trail.jsonl`).
-- **Configurable Budget Monitoring:** Tracks overall and category-level spending against configurable thresholds (**Warning ≥ 80%**, **Critical ≥ 100%**) and suggests data-grounded reductions from top discretionary categories.
-- **Deterministic Goal-Based SIP Calculator:** Computes required monthly SIP installments using exact annuity-due compounding (accounting for existing corpus, horizon, risk profile, and monthly investible surplus) — never relying on LLM arithmetic.
-- **Dual UI Architecture:** Includes a **Streamlit Chat + Live Dashboard (`app.py`)** showing real-time tool calls, budget charts, and SIP growth curves, alongside full compatibility with **Google ADK's built-in Web UI (`adk web`)**.
-
----
 
 ## Architecture
 
-```mermaid
-flowchart TB
-    classDef user fill:#1e293b,stroke:#38bdf8,stroke-width:2px,color:#f8fafc
-    classDef agent fill:#0f172a,stroke:#818cf8,stroke-width:2px,color:#f8fafc
-    classDef guardrail fill:#450a0a,stroke:#f87171,stroke-width:2px,color:#fef2f2
-    classDef tool fill:#064e3b,stroke:#34d399,stroke-width:2px,color:#ecfdf5
-    classDef store fill:#422006,stroke:#fbbf24,stroke-width:2px,color:#fffbeb
-    classDef hitl fill:#3b0764,stroke:#e879f9,stroke-width:2px,stroke-dasharray: 5 5,color:#fdf4ff
+### System Architecture Diagram
+![Architecture Diagram](images/system_arch1.png)
 
-    User(["👤 User<br/>(Streamlit Dashboard + Chat / ADK Web UI)"]):::user
+Explains the flow of data and responsibilities among the components:
+1. **User Input:** Users provide financial data via CSV or TXT files. Users interact with the system through a Streamlit interface or the Google ADK Web UI, allowing them to review transactions, monitor budgets, and calculate SIP plans.
 
-    subgraph InputGuard["🛡️ Input & Privacy Guardrails"]
-        PII["Regex PII & Account Masking<br/>(privacy.py: A/C, Cards, UPI)"]:::guardrail
-        FileVal["File & Schema Validator<br/>(Rejects unsupported/negative rows)"]:::guardrail
-    end
+2. **Data Processing Pipeline:** The system parses the input files, categorizes transactions, evaluates budgets, and calculates SIP plans using deterministic tools. It also handles privacy masking, duplicate detection, and low-confidence categorizations.
 
-    subgraph Orchestrator["🧠 Google ADK Agent Layer"]
-        ADK["LlmAgent: personal_finance_planner<br/>(LiteLLM → Local Ollama: Gemma 4)"]:::agent
-        Planner{"Dynamic Tool Router<br/>& Missing-Input Check"}:::agent
-    end
+3. **Input and Privacy Guardrails:** The system ensures that sensitive information is masked before processing. It validates the input format and checks for duplicates or low-confidence categorizations.
+   
+4. **Agents/Tools:** Coordinates the workflow, invoking various tools for parsing, categorization, and evaluation. 
+   
+![Tools/Agents Architecture Diagram](images/tool_flow.png)
 
-    subgraph Tools["⚙️ Deterministic Tool Suite"]
-        Parser["parser_tools.py<br/>• CSV/TXT Normalization (DEBIT/CREDIT)<br/>• Duplicate Detection"]:::tool
-        MemoryTool["memory_tools.py<br/>• Known Merchant Lookup<br/>• Staged Save Gate"]:::tool
-        BudgetTool["budget_tools.py<br/>• Overall & Category Limits<br/>• 80% Warn / 100% Crit Alerts"]:::tool
-        SIPTool["sip_tools.py<br/>• Annuity-Due Compounding<br/>• Corpus & Surplus Feasibility"]:::tool
-    end
+| Component | Type | Responsibility |
+| :--- | :--- | :--- |
+| `personal_finance_planner` | Root agent | Coordinates the overall workflow |
+| `parse_financial_file` | Tool | Reads and parses financial CSV/TXT files |
+| `lookup_known_merchants` | Tool | Retrieves previously approved merchant categories |
+| `save_approved_transactions` | Tool | Saves transactions after the required confirmation |
+| `get_saved_transactions` | Tool | Retrieves saved transactions |
+| `evaluate_monthly_budget` | Tool | Evaluates spending against budget limits |
+| `calculate_goal_sip_plan` | Tool | Calculates SIP requirements for a financial goal |
 
-    subgraph HumanGate["✋ Human-in-the-Loop (HITL) Approval Points"]
-        Review1["Gate 1: Review Extracted Table,<br/>Low-Confidence (<0.75) & Duplicates"]:::hitl
-        Review2["Gate 2: Explicit Confirmation<br/>(user_confirmed=True) & Disclaimer"]:::hitl
-    end
+5. **Data Persistence:** Approved transactions, merchant mappings, and audit logs are stored in JSON files for future reference and analysis. 
 
-    subgraph DataStore["🗄️ Local Persistence & Audit Store (data/store/)"]
-        MerchantMap[("merchant_map.json<br/>Approved Category Memory")]:::store
-        TxnStore[("approved_transactions.json<br/>Normalized Ledger")]:::store
-        SipStore[("latest_sip_plan.json<br/>SIP Projection Schedule")]:::store
-        AuditLog[("audit_trail.jsonl<br/>Append-Only Event Log")]:::store
-    end
-
-    User -->|"1. Uploads CSV/TXT, Budget, or Goal"| FileVal
-    FileVal --> PII
-    PII -->|"2. Masked Input"| ADK
-    ADK <--> Planner
-
-    Planner -->|"Parse & Deduplicate"| Parser
-    Planner -->|"Check Prior Mappings"| MemoryTool
-    Planner -->|"Evaluate Spend"| BudgetTool
-    Planner -->|"Compute SIP"| SIPTool
-
-    Parser --> Review1
-    MemoryTool <--> MerchantMap
-    Review1 -->|"3. User Approves / Corrects"| Review2
-    Review2 -->|"4. Confirmed Write"| TxnStore
-    Review2 -->|"Learn Merchant Rule"| MerchantMap
-
-    TxnStore --> BudgetTool
-    SIPTool --> SipStore
-    BudgetTool -->|"Alerts + Top Discretionary Spend"| ADK
-    SIPTool -->|"SIP Estimate + Educational Disclaimer"| ADK
-
-    Parser -.-> AuditLog
-    MemoryTool -.-> AuditLog
-    BudgetTool -.-> AuditLog
-    SIPTool -.-> AuditLog
-
-    ADK -->|"5. Live Tool Badges, Charts & Report"| User
-```
+### Design Principles
+- **Privacy-First:** Ensures sensitive financial data is masked and not exposed to the LLM or external systems.
+- **Human-in-the-Loop:** Requires user approval for low-confidence categorizations and duplicate transactions before saving to ensure accuracy and user control.
+- **Deterministic Calculations:** Uses exact mathematical formulas for budget evaluation and SIP calculations, avoiding reliance on LLM-generated arithmetic.
+- **Transparency & Auditability:** Maintains an append-only audit trail of all state-changing actions for accountability and traceability.
 
 ---
 
@@ -162,13 +114,13 @@ pytest -v
 
 ## Running the Application
 
-### Option A: Streamlit Chat + Live Dashboard (Primary UI)
+### Option A: Streamlit Chat + Live Dashboard
 Displays real-time tool invocations alongside live budget utilization metrics, category spend charts, and goal SIP compounding curves:
 ```bash
 streamlit run app.py
 ```
 
-### Option B: Google ADK Built-in Web UI (Fallback / Developer UI)
+### Option B: Google ADK Built-in Web UI
 ```bash
 adk web
 ```

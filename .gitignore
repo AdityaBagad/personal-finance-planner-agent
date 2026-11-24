@@ -7,3 +7,4 @@ data/store/*.json
 data/store/*.jsonl
 data/uploads/
 .pytest_cache/
+images/system_arch_mermaid.*

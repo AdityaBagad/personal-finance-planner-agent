@@ -68,6 +68,5 @@ tests/test_deterministic_tools.py::test_sip_calculator_and_feasibility PASSED [1
 ## 4. Known Limitations & Future Improvements
 
 1. **Scanned PDF / Image OCR:** The current prototype supports structured `.csv` and `.txt` files out of the box. Native PDF table extraction (`pdfplumber`) or direct receipt image vision via Gemma 4 multimodal inputs can be added as an extension in `parser_tools.py`.
-2. **Local Storage Concurrency:** State is stored in local JSON/JSONL files (`data/store/`) for zero-setup portability; multi-user deployments should migrate to SQLite or PostgreSQL.
-3. **Static Return Assumptions:** SIP projections use constant monthly compounding based on risk-profile return assumptions (`8%`, `11%`, `13.5%`) and do not model step-up SIPs, inflation adjustments, or expense ratios.
-4. **Small Local Model Variance:** While `gemma4:e4b` runs smoothly on 8GB–16GB laptops, larger models (`gemma4:26b`) provide stricter adherence to multi-tool chaining on complex prompts.
+2. **Local Storage Concurrency:** State is stored in local JSON/JSONL files (`data/store/`) for zero-setup portability; multi-user deployments should migrate to SQLite or PostgreSQL for ACID compliance and concurrent access.
+3. **Small Local Model Variance:** While `gemma4:e4b` runs smoothly on 8GB–16GB laptops, larger models (`gemma4:26b`) provide stricter adherence to multi-tool chaining on complex prompts.

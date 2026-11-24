@@ -1,0 +1,32 @@
+==================================================
+            DORABJEE'S FINE FOODS
+         Koregaon Park, Pune - 411001
+             GSTIN: 27AAACD1234F1Z5
+==================================================
+Receipt No : INV-2026-88419
+Date       : 2026-11-18
+Time       : 19:42:10
+Cashier    : Counter-03
+--------------------------------------------------
+Item                        Qty     Rate    Amount
+--------------------------------------------------
+Amul Taaza Milk 1L           2     56.00    112.00
+Whole Wheat Sourdough        1    125.00    125.00
+Extra Virgin Olive Oil 500ml 1    680.00    680.00
+Organic Basmati Rice 2kg     1    340.00    340.00
+Fresh Vegetables & Fruits    -         -    410.50
+Filter Coffee Powder 250g    1    178.00    178.00
+--------------------------------------------------
+Subtotal                                   1845.50
+CGST (Included)                               0.00
+SGST (Included)                               0.00
+--------------------------------------------------
+GRAND TOTAL (INR)                          1845.50
+--------------------------------------------------
+Payment Mode : UPI / Card
+Card Number  : 4532110099887766
+UPI Ref      : rohan.pune@okhdfcbank
+Status       : APPROVED (DEBIT)
+==================================================
+       Thank you for shopping with us!
+==================================================
