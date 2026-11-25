@@ -144,3 +144,22 @@ Open `http://127.0.0.1:8000` in your browser and select **`finance_planner`** fr
 - **Supported Formats:** `.csv` (with headers `transaction_id,date,merchant,raw_description,amount_inr,direction,currency`) and `.txt` receipt files.
 - **Configurable Environment Variables (`.env`):**
   - `OLLAMA_MODEL` (default: `ollama_chat/gemma4:e4b`)
+
+---
+
+## Output Examples
+
+![Sample Output](images/output1.png)
+
+---
+
+![Sample Output](images/output2.png)
+
+---
+
+![Sample Output](images/output3.png)
+
+---
+
+![Sample Output](images/output4.png)
+
