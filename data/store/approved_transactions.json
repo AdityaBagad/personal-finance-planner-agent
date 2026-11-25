@@ -1,0 +1,101 @@
+[
+  {
+    "amount": 95000,
+    "category": "Income",
+    "confidence": 1,
+    "date": "2026-11-01",
+    "merchant": "TechCorp Payroll",
+    "reason": "Payroll credit.",
+    "transaction_id": "TXN-1001"
+  },
+  {
+    "amount": 25000,
+    "category": "Rent",
+    "confidence": 1,
+    "date": "2026-11-01",
+    "merchant": "Prestige Rentals",
+    "reason": "Direct rent payment reference.",
+    "transaction_id": "TXN-1001"
+  },
+  {
+    "amount": 26000,
+    "category": "Rent",
+    "confidence": 1,
+    "date": "2026-11-02",
+    "merchant": "Prestige Rentals",
+    "reason": "Direct rent payment reference.",
+    "transaction_id": "TXN-1002"
+  },
+  {
+    "amount": 4200,
+    "category": "Groceries",
+    "confidence": 1,
+    "date": "2026-11-03",
+    "merchant": "BigBasket",
+    "reason": "Keywords matching grocery shopping.",
+    "transaction_id": "TXN-1002"
+  },
+  {
+    "amount": 4350,
+    "category": "Groceries",
+    "confidence": 0.95,
+    "date": "2026-11-04",
+    "merchant": "BigBasket",
+    "reason": "Keywords matching grocery shopping.",
+    "transaction_id": "TXN-1003"
+  },
+  {
+    "amount": 3150,
+    "category": "Shopping",
+    "confidence": 0.8,
+    "date": "2026-11-05",
+    "merchant": "ABC Enterprises",
+    "reason": "POS transaction, categorized as Shopping.",
+    "transaction_id": "TXN-1004"
+  },
+  {
+    "amount": 3200,
+    "category": "Shopping",
+    "confidence": 0.8,
+    "date": "2026-11-06",
+    "merchant": "ABC Enterprises",
+    "reason": "POS transaction, categorized as Shopping.",
+    "transaction_id": "TXN-1005"
+  },
+  {
+    "amount": 2850,
+    "category": "Utilities",
+    "confidence": 1,
+    "date": "2026-11-08",
+    "merchant": "BESCOM",
+    "reason": "Identified as an electricity bill.",
+    "transaction_id": "TXN-1005"
+  },
+  {
+    "amount": 2450,
+    "category": "Utilities",
+    "confidence": 1,
+    "date": "2026-11-09",
+    "merchant": "MSEDCL",
+    "reason": "Identified as an electricity bill.",
+    "transaction_id": "TXN-1006"
+  },
+  {
+    "amount": 1450,
+    "category": "Entertainment",
+    "confidence": 0.9,
+    "date": "2026-11-10",
+    "merchant": "Swiggy",
+    "reason": "Service used for food delivery/dining.",
+    "transaction_id": "TXN-1006"
+  },
+  {
+    "amount": 1180,
+    "category": "Entertainment",
+    "confidence": 0.9,
+    "date": "2026-11-12",
+    "merchant": "Swiggy",
+    "reason": "Service used for food delivery/dining.",
+    "transaction_id": "TXN-1007"
+  }
+]
